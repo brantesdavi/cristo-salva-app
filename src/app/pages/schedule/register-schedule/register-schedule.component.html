@@ -1,0 +1,55 @@
+<div class="flex justify-center items-center w-full">
+  <form [formGroup]="register" (ngSubmit)="loginUser()">
+    <p-card [style]="{ width: '360px'}">
+      <div class="flex flex-col space-y-4">
+        <div class="flex flex-col space-y-2">
+          <div class="field" name="titleField">
+            <label for="title">Titulo da escala</label>
+            <input
+              type="text"
+              pInputText
+              formControlName="title"
+              class="w-full"
+              name="title"
+              placeholder="Digite o titulo da escala"
+            />
+            <small
+              *ngIf="title?.invalid && (title?.dirty || title?.touched)"
+              class="block p-error"
+            >
+              <div *ngIf="title?.errors?.['required']">Um titulo é necessario.</div>
+            </small>
+          </div>
+          <!-- Usando apenas formControlName -->
+          <div class="field">
+            <label for="calendar">Data e Hora</label>
+            <p-calendar 
+              inputId="calendar-24h" 
+              formControlName="datetime" 
+              [showTime]="true" 
+              [hourFormat]="24"
+              class="w-full"
+              ngDefaultControl
+            ></p-calendar>
+            <small
+              *ngIf="datetime?.invalid && (datetime?.dirty || datetime?.touched)"
+              class="block p-error"
+            >
+              <div *ngIf="datetime?.errors?.['required']">A data e a hora são necessárias.</div>
+            </small>
+          </div>
+                   
+
+        </div>
+        <p-button
+          label="SIGN IN"
+          styleClass="w-full"
+          [disabled]="register.invalid"
+          type="submit"
+        ></p-button>
+      </div>
+    </p-card>
+  </form>
+  
+  <p-toast></p-toast>
+</div>

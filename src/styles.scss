@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+@import "primeng/resources/themes/soho-dark/theme.css";
+@import "primeng/resources/primeng.css";
+
+@tailwind components;
+@tailwind utilities;
+
+@layer reset, primeng, component;
+
+
+
+@layer reset {
+    button {
+        background-color: #BE123C;
+        color: white;
+        font-weight: 600;
+        border-color: #F3184E;
+        &:focus {
+            outline: none; /* Remove a borda padrão de foco */
+            box-shadow: 0 0 0 2px rgba(190, 18, 60, 0.6); /* Adiciona uma borda de foco personalizada */
+        }
+    }
+}
+
+

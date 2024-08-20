@@ -1,0 +1,11 @@
+<div  class="">
+
+  <div *ngFor="let schedule of scheduleByUser">
+    <div class="flex space-x-4">
+      <div class="bg-rose-700 py-3 px-3.5 rounded-md" >
+        <span class="text-xl font-bold">{{ schedule.startTime | date: 'dd' }}</span>
+      </div>
+      <span class="text-white">{{ schedule.title }}</span>
+    </div>
+  </div>
+</div>

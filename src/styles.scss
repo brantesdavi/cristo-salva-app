@@ -1,24 +1,87 @@
 @import "primeng/resources/themes/soho-dark/theme.css";
 @import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
 
 @tailwind components;
 @tailwind utilities;
 
-@layer reset, primeng, component;
+@layer components {
+    /* Personalizando o p-card */
+    .p-card {
+        background-color: #262626; /* Cor de fundo personalizada */
+        color: white; /* Cor do texto personalizada */
+        border: 1px solid #444; /* Cor da borda personalizada, se necessário */
+    }
+
+    .p-card {
+        background-color: #262626; /* Cor de fundo personalizada */
+        color: white; /* Cor do texto personalizada */
+        border: 1px solid #444; /* Cor da borda personalizada, se necessário */
+    }
 
 
-
-@layer reset {
-    button {
-        background-color: #BE123C;
-        color: white;
+    
+    /* Personalizando o botão */
+    .p-button {
+        background-color: #BE123C; /* Cor de fundo do botão */
+        color: white; /* Cor do texto do botão */
         font-weight: 600;
-        border-color: #F3184E;
+        border: 1px solid #F3184E; /* Cor da borda do botão */
+        
         &:focus {
             outline: none; /* Remove a borda padrão de foco */
             box-shadow: 0 0 0 2px rgba(190, 18, 60, 0.6); /* Adiciona uma borda de foco personalizada */
         }
+        
     }
 }
 
+/* Se você precisar de um reset adicional ou estilizações específicas para outros elementos */
+@layer reset {
 
+    .trashButton{
+        height: 100%;
+        padding-left: 12px;
+        padding-right: 12px;
+        background-color: #474747;
+        border: none;
+        border-radius: 8px;
+    }
+    .tuneButton{
+        height: 100%;
+        padding-left: 12px;
+        padding-right: 12px;
+        font-size: 16px;
+        background-color: #F3184E;
+        border: none;
+        border-radius: 8px;
+    }   
+    
+
+    input, textarea, .list-field {
+        background-color: #181818;
+        border: 0;
+        &:focus {
+            border-color: #F3184E;
+            outline: none; /* Remove a borda padrão de foco */
+            box-shadow: 0 0 0 2px rgba(190, 18, 60, 0.6); /* Adiciona uma borda de foco personalizada */
+        }
+    }
+
+    .input-label{
+        font-size: 14px;
+        color: #B3B3B3;
+    }
+
+    
+    .title-div {
+        padding-top: 16px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid #1D1D1D; 
+    }
+    .title {
+        color: #F6F6F6;
+    }
+
+    
+}

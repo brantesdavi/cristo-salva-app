@@ -1,55 +1,209 @@
-<div class="flex justify-center items-center w-full">
-  <form [formGroup]="register" (ngSubmit)="loginUser()">
-    <p-card [style]="{ width: '360px'}">
-      <div class="flex flex-col space-y-4">
-        <div class="flex flex-col space-y-2">
-          <div class="field" name="titleField">
-            <label for="title">Titulo da escala</label>
-            <input
-              type="text"
-              pInputText
-              formControlName="title"
-              class="w-full"
-              name="title"
-              placeholder="Digite o titulo da escala"
-            />
-            <small
-              *ngIf="title?.invalid && (title?.dirty || title?.touched)"
-              class="block p-error"
-            >
-              <div *ngIf="title?.errors?.['required']">Um titulo é necessario.</div>
-            </small>
+<div class="flex justify-center w-full h-screen px-2">
+  <form [formGroup]="register" class="w-full">
+    <div class="title-div">
+      <span class="text-xl title">Cadastrar escala</span>
+    </div>
+    <div class="flex flex-col space-y-4 py-4">
+      <div class="flex flex-col space-y-3">
+        <!-- Title Field -->
+        <div class="field space-y-1 " name="titleField">
+          <label class="input-label" for="title">Titulo da escala</label>
+          <input
+            type="text"
+            pInputText
+            formControlName="title"
+            class="w-full"
+            placeholder="Digite o titulo da escala"
+          />
+          <small
+            *ngIf="register.get('title')?.invalid && (register.get('title')?.dirty || register.get('title')?.touched)"
+            class="block p-error"
+          >
+            <div *ngIf="register.get('title')?.errors?.['required']">Um titulo é necessario.</div>
+          </small>
+        </div>
+
+        <!-- Date and Time -->
+        <div class="field flex flex-col space-y-1">
+          <label class="input-label" for="calendar">Data e Hora</label>
+          <p-calendar 
+            class="w-full"
+            inputId="calendar-24h" 
+            formControlName="startTime" 
+            [showTime]="true" 
+            hourFormat="24"
+            placeholder="Escolha a data e hora"
+           ngDefaultControl
+          ></p-calendar>
+          <small
+            *ngIf="register.get('startTime')?.invalid && (register.get('startTime')?.dirty || register.get('startTime')?.touched)"
+            class="block p-error">
+            <span *ngIf="register.get('startTime')?.errors?.['required']">A data e a hora são necessárias.</span>
+          </small>
+        </div>
+
+        <!-- Observations -->
+        <div class="field flex flex-col space-y-1">
+          <label class="input-label" for="obs">Observação</label>
+          <textarea 
+            rows="5" 
+            cols="30" 
+            pInputTextarea 
+            formControlName="obs"
+          ></textarea>
+          <small
+            *ngIf="register.get('obs')?.invalid && (register.get('obs')?.dirty || register.get('obs')?.touched)"
+          class="block p-error">
+          <span *ngIf="register.get('obs')?.errors?.['required']">A observação é necessária.</span>
+          </small>
+        </div>
+
+        <!-- Minister -->
+        <div class="field flex flex-col space-y-1 relative">
+          <label class="input-label" for="calendar">Ministro</label>
+          <p-iconField iconPosition="right">
+            <p-inputIcon styleClass="pi pi-search" />
+            <input type="text" pInputText formControlName="ministro" class="w-full"/>
+          </p-iconField>
+          <div class="suggestion rounded-lg py-2 px-4 absolute bg-white w-full flex flex-col space-y-8" 
+            *ngIf="ministerSearch.length > 0">
+            <div *ngFor="let minister of ministerSearch">
+              <div (click)="choseMinister(minister)" class="cursor-pointer">
+                {{ minister.username }}
+              </div>
+            </div>
           </div>
-          <!-- Usando apenas formControlName -->
-          <div class="field">
-            <label for="calendar">Data e Hora</label>
-            <p-calendar 
-              inputId="calendar-24h" 
-              formControlName="datetime" 
-              [showTime]="true" 
-              [hourFormat]="24"
-              class="w-full"
-              ngDefaultControl
-            ></p-calendar>
-            <small
-              *ngIf="datetime?.invalid && (datetime?.dirty || datetime?.touched)"
-              class="block p-error"
-            >
-              <div *ngIf="datetime?.errors?.['required']">A data e a hora são necessárias.</div>
-            </small>
+        </div>
+
+        <!-- Musicians -->
+        <div class="field flex flex-col space-y-1 relative">
+          <label class="input-label" for="calendar">Músicos</label>
+          <p-iconField iconPosition="right">
+            <p-inputIcon styleClass="pi pi-search" />
+            <input type="text" pInputText formControlName="musicos" class="w-full" placeholder="Procure uma música"/>
+          </p-iconField>
+          <div class="suggestion rounded-lg py-2 px-4 absolute bg-white w-full flex flex-col space-y-8" 
+            *ngIf="musicianSearch.length > 0">
+            <div *ngFor="let musician of musicianSearch">
+              <div (click)="addMusician(musician)" class="cursor-pointer">
+                {{ musician.username }}
+              </div>
+            </div>
           </div>
-                   
 
         </div>
-        <p-button
-          label="SIGN IN"
-          styleClass="w-full"
-          [disabled]="register.invalid"
-          type="submit"
-        ></p-button>
+
+        <div  
+          class="list-field rounded-lg py-6 px-4 border">
+          <div *ngIf="!musicians.length && !ministerChoosed" class="flex justify-center items-center">            
+            Nenhum musico selecionado
+          </div>
+          <div 
+            *ngIf="musicians.length || ministerChoosed" 
+            class="flex flex-col space-y-4 w-full">
+
+            <div *ngIf="ministerChoosed" class="flex flex-col space-y-2">
+              <span>Ministro:</span>
+              <span>{{ ministerChoosed?.username }}</span>
+            </div>
+            <div *ngIf="musicians.length" class="flex flex-col space-y-2">
+              <span>Músicos:</span>
+              <div *ngFor="let musician of musicians" >
+                <div class="flex justify-between">
+                  <div class="flex flex-row items-end py-2">
+                    {{ musician?.username }}
+                  </div>
+                  <div class="flex space-x-2">
+                    <button class="trashButton cursor-pointer" (click)="rmMusicianList(musician)">
+                      <i class="pi pi-trash"></i>
+                    </button>
+                  </div>
+                </div>   
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Setlist -->
+        <div class="field flex flex-col space-y-1 relative">
+          <label class="input-label" for="calendar">Setlist</label>
+          <p-iconField iconPosition="right">
+            <p-inputIcon styleClass="pi pi-search" />
+            <input type="text" pInputText 
+              formControlName="searchQuery"
+              class="w-full"
+              placeholder="Procure uma música"
+            />
+          </p-iconField>
+
+          <div class="suggestion rounded-lg py-2 px-4 absolute bg-white w-full flex flex-col space-y-8" 
+            *ngIf="suggestions.length > 0">
+            <div *ngFor="let song of suggestions" >
+              <div (click)="addSetList(song)" class="cursor-pointer">
+                {{ song.title }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div  
+          class="list-field rounded-lg py-6 px-4 border">
+          <div *ngIf="!trackList.length" class="flex justify-center items-center">            
+            Setlist vazia
+          </div>
+          <div *ngIf="trackList.length" class="flex flex-col space-y-2 w-full">
+            <div *ngFor="let track of trackList" >
+              <div class="flex justify-between">
+                <div class="flex flex-row items-end py-2">
+                  {{ track.song.title }} <span class="text-xs text-stone-400 text-end"> {{track.song.artist}} </span>
+                </div>
+                <div class="flex space-x-2">
+                  <button class="trashButton cursor-pointer" (click)="rmSetList(track)">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                  <button class="tuneButton cursor-pointer" (click)="showDialog(track)">
+                    {{track.tune}}
+                  </button>
+                </div>
+              </div>   
+            </div>
+          </div>
+        </div>
       </div>
-    </p-card>
+      <p-button
+  label="CADASTRAR"
+  styleClass="w-full"
+  [disabled]="register.invalid"
+  type="button"
+  (click)="onSubmit()"
+></p-button>
+
+    </div>
   </form>
   
   <p-toast></p-toast>
+
+  <p-dialog header="Change tune" [(visible)]="visible" [style]="{ width: '25rem' }">
+    <span class="p-text-secondary block mb-5">Choose the tune {{editTune?.oTune}}</span>
+    <div class="flex align-items-center gap-3 mb-3">
+      <div class="flex flex-wrap gap-3">
+        <div *ngFor="let tune of tunes" class="field-checkbox">
+          <p-radioButton 
+              [inputId]="tune.key" 
+              name="tune" 
+              [value]="tune" 
+              [(ngModel)]="selectedTune" />
+          <label [for]="tune.key" class="ml-2">
+              {{ tune.name }}
+          </label>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <p-button label="Confirm" icon="pi pi-check" (click)="confirmTuneChange()"></p-button>
+      <p-button label="Cancel" icon="pi pi-times" (click)="visible = false"></p-button>
+    </p-footer>
+  </p-dialog>
+  
+  
 </div>

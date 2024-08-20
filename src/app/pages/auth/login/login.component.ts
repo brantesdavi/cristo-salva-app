@@ -3,12 +3,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth/auth.service';
 import { MessageService } from 'primeng/api'; // Importa o MessageService
+import { LocalstorageService } from '../../../services/localstorage/localstorage.service';
+
+
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  providers: [AuthService, MessageService] // Adiciona MessageService ao providers
+  providers: [AuthService, MessageService, LocalstorageService] // Adiciona MessageService ao providers
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -17,16 +20,17 @@ export class LoginComponent {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private messageService: MessageService // Injeta o MessageService
+    private messageService: MessageService,
+    private localStorage: LocalstorageService
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      username: ['', [Validators.required]],
       password: ['', Validators.required]
     });
   }
 
-  get email() {
-    return this.loginForm.get('email');
+  get username() {
+    return this.loginForm.get('username');
   }
 
   get password() {
@@ -39,7 +43,7 @@ export class LoginComponent {
     }
 
     const credentials = {
-      email: this.email?.value,
+      username: this.username?.value,
       password: this.password?.value
     };
 
@@ -47,7 +51,9 @@ export class LoginComponent {
       .subscribe({
         next: (res) => {
           if (res.accessToken) {
-            this.router.navigate(['/songs']);
+            this.localStorage.setToken(res.accessToken)   
+            this.localStorage.setUserId(res.userID)     
+            this.router.navigate(['/calendar']);
           }
         },
         error: (error) => {

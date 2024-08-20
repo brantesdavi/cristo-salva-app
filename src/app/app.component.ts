@@ -10,6 +10,8 @@ import { MessagesModule } from 'primeng/messages';
 import { ToastModule } from 'primeng/toast';
 import { HttpClientModule } from '@angular/common/http';
 import { RegisterScheduleModule } from './pages/schedule/register-schedule/register-schedule.module';
+import { CalendarModule } from './pages/schedule/calendar/calendar.module';
+
 
 @Component({
   selector: 'app-root',
@@ -27,7 +29,8 @@ import { RegisterScheduleModule } from './pages/schedule/register-schedule/regis
     HttpClientModule,
 
     LoginModule,
-    RegisterScheduleModule
+    RegisterScheduleModule,
+    CalendarModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
